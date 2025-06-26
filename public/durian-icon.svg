@@ -1,0 +1,18 @@
+<svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Durian fruit body -->
+  <ellipse cx="32" cy="40" rx="20" ry="16" fill="#007852"/>
+  
+  <!-- Durian spikes -->
+  <path d="M12 40 L16 35 L20 40 L24 35 L28 40 L32 35 L36 40 L40 35 L44 40 L48 35 L52 40" stroke="#01AF5E" stroke-width="2" fill="none"/>
+  <path d="M12 36 L16 31 L20 36 L24 31 L28 36 L32 31 L36 36 L40 31 L44 36 L48 31 L52 36" stroke="#01AF5E" stroke-width="2" fill="none"/>
+  <path d="M12 44 L16 39 L20 44 L24 39 L28 44 L32 39 L36 44 L40 39 L44 44 L48 39 L52 44" stroke="#01AF5E" stroke-width="2" fill="none"/>
+  
+  <!-- Durian stem -->
+  <rect x="30" y="24" width="4" height="8" fill="#8B4513"/>
+  
+  <!-- Durian leaf -->
+  <path d="M32 24 Q40 20 44 24 Q40 28 32 24" fill="#95D598"/>
+  
+  <!-- Highlight -->
+  <ellipse cx="28" cy="36" rx="4" ry="3" fill="#95D598" opacity="0.3"/>
+</svg> 
