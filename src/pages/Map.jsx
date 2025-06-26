@@ -37,7 +37,7 @@ const Map = () => {
 
   const fetchStalls = async () => {
     try {
-      const response = await axios.get('/api/stalls')
+      const response = await axios.get('/.netlify/functions/getStalls')
       setStalls(response.data)
     } catch (error) {
       console.error('Error fetching stalls:', error)

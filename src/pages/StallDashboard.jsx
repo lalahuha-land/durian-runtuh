@@ -38,7 +38,7 @@ const StallDashboard = () => {
 
   const fetchStallData = async () => {
     try {
-      const response = await axios.get('/api/stalls/my-stall')
+      const response = await axios.get('/.netlify/functions/getStalls')
       setStall(response.data)
       
       // Set stall form data
@@ -89,7 +89,7 @@ const StallDashboard = () => {
     setSuccess('')
 
     try {
-      await axios.put('/api/stalls/update-stall', {
+      await axios.put('/.netlify/functions/updateStall', {
         name: stallForm.name,
         address: stallForm.address,
         latitude: parseFloat(stallForm.latitude) || null,
@@ -124,7 +124,7 @@ const StallDashboard = () => {
         varieties: stockForm.varieties.filter(v => v.stock !== 'sold-out' || v.price)
       }
 
-      await axios.post('/api/stalls/update-stock', updateData)
+      await axios.post('/.netlify/functions/updateStock', updateData)
       setSuccess('Stock updated successfully!')
       
       // Refresh stall data
