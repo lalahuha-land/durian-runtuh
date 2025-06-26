@@ -150,6 +150,41 @@ const StallDashboard = () => {
   return (
     <div className="min-h-screen bg-durian-cream py-8">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Stall Details Card */}
+        {stall ? (
+          <div className="card mb-6">
+            <h2 className="text-2xl font-bold text-durian-primary mb-2">{stall.name}</h2>
+            <p className="text-gray-700 mb-1"><strong>Address:</strong> {stall.address}</p>
+            <p className="text-gray-700 mb-1"><strong>Phone:</strong> {stall.phone}</p>
+            {stall.latitude && stall.longitude && (
+              <p className="text-gray-700 mb-1">
+                <strong>Location:</strong> {stall.latitude}, {stall.longitude}
+              </p>
+            )}
+          </div>
+        ) : (
+          <div className="text-red-600 font-semibold mb-6">
+            No stall found for your account.
+          </div>
+        )}
+
+        {/* Latest Stock Update */}
+        {stall?.latestUpdate && (
+          <div className="card mb-6">
+            <h3 className="text-lg font-semibold text-durian-primary mb-2">Latest Stock Update</h3>
+            <ul>
+              {stall.latestUpdate.varieties.map((variety, idx) => (
+                <li key={idx}>
+                  <strong>{variety.name}</strong>: RM{variety.price} ({variety.stock})
+                </li>
+              ))}
+            </ul>
+            <p className="text-gray-500 text-sm mt-2">
+              Last updated: {new Date(stall.latestUpdate.lastUpdated).toLocaleString()}
+            </p>
+          </div>
+        )}
+
         {/* Tips Section - now at the top and visually attractive */}
         <div className="mb-8">
           <div className="rounded-xl bg-gradient-to-r from-durian-light to-durian-cream border border-durian-primary shadow flex items-start p-6">
