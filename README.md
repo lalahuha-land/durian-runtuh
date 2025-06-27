@@ -1,6 +1,6 @@
 # DurianRuntuh 🥭
 
-A Hyper-Local Durian Stock & Price Checker - Find fresh durians near you!
+Find Fresh Durians Near You. The ultimate app for durian lovers. Check stock and prices at local stalls in real-time.
 
 ## 🚀 Quick Start
 
@@ -199,4 +199,82 @@ MIT License - feel free to use this project for learning and commercial purposes
 
 ---
 
-**Happy Durian Hunting! 🥭✨** 
+**Happy Durian Hunting! 🥭✨**
+
+## Features
+- **Customer Map & Search:** Customers can search for durian stalls by state and variety, view details, and open navigation in Waze or Google Maps.
+- **Admin Panel:** Only admin can add, edit, or delete stall details and durian varieties.
+- **No Stall Owners:** Only admin manages stalls; customers cannot register or manage stalls.
+- **PostgreSQL Database:** All stall and variety data is stored in PostgreSQL (e.g., Neon, Supabase, Railway).
+- **Netlify Functions:** All backend logic (CRUD, auth) is handled by serverless functions.
+
+## Setup & Installation
+
+### 1. Clone the Repository
+```bash
+git clone https://github.com/lalahuha-land/durian-runtuh.git
+cd durian-runtuh
+```
+
+### 2. Install Dependencies
+```bash
+npm install
+```
+
+### 3. Database Setup
+- Use PostgreSQL (Neon, Supabase, Railway, etc.)
+- Run the following SQL to set up your schema:
+
+```sql
+CREATE TABLE IF NOT EXISTS stalls (
+  id SERIAL PRIMARY KEY,
+  name TEXT NOT NULL,
+  address TEXT NOT NULL,
+  state TEXT NOT NULL,
+  latitude REAL,
+  longitude REAL,
+  phone TEXT,
+  varieties TEXT, -- JSON string: array of {name, price, stock}
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+```
+
+### 4. Environment Variables
+Set these in your `.env` (for local) and in Netlify dashboard:
+- `DATABASE_URL` — your PostgreSQL connection string
+- `JWT_SECRET` — a long random string
+- `ADMIN_PASSWORD` — your chosen admin password
+
+### 5. Netlify Functions
+- All backend logic is in `/netlify/functions/` (addStall, editStall, deleteStall, getAllStalls, adminLogin, etc.)
+- Functions require a valid admin JWT for stall management endpoints.
+
+### 6. Running Locally
+```bash
+npm run dev
+# In another terminal (if needed):
+netlify dev
+```
+
+### 7. Deployment
+- Deploy to Netlify for frontend and serverless backend.
+- Set environment variables in Netlify dashboard.
+
+## Admin Usage
+- Go to `/admin-login` to log in as admin.
+- After login, access `/admin` to manage stalls and varieties.
+- Only admin can add, edit, or delete stalls and varieties.
+
+## Customer Usage
+- Customers can search for stalls by state and durian variety on the map.
+- Click a stall to view details and open navigation in Waze or Google Maps.
+
+## Tech Stack
+- React + Vite (frontend)
+- Tailwind CSS (styling)
+- Netlify Functions (backend)
+- PostgreSQL (database)
+
+## License
+GPL-3.0 

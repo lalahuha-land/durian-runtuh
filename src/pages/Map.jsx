@@ -5,8 +5,19 @@ import axios from 'axios'
 const Map = () => {
   const [stalls, setStalls] = useState([])
   const [loading, setLoading] = useState(true)
+  const [selectedState, setSelectedState] = useState('all')
   const [selectedVariety, setSelectedVariety] = useState('all')
   const [userLocation, setUserLocation] = useState([3.1390, 101.6869]) // Default to KL
+
+  const states = [
+    'all',
+    'Selangor',
+    'Penang',
+    'Johor',
+    'Perak',
+    'Pahang',
+    // ...add all states you support
+  ]
 
   const durianVarieties = [
     'all',
@@ -80,11 +91,15 @@ const Map = () => {
     }
   }
 
-  const filteredStalls = selectedVariety === 'all' 
-    ? stalls 
-    : stalls.filter(stall => 
-        stall.latestUpdate?.varieties?.some(v => v.name === selectedVariety && v.stock !== 'sold-out')
-      )
+  const filteredStalls = stalls.filter(stall => {
+    const matchesState = selectedState === 'all' || stall.state === selectedState;
+    const matchesVariety =
+      selectedVariety === 'all' ||
+      stall.latestUpdate?.varieties?.some(
+        v => v.name === selectedVariety && v.stock !== 'sold-out'
+      );
+    return matchesState && matchesVariety;
+  });
 
   const getStockColor = (stock) => {
     switch (stock) {
@@ -124,13 +139,25 @@ const Map = () => {
           <h1 className="text-3xl font-bold text-durian-primary mb-4">
             Find Durian Stalls Near You
           </h1>
-          
-          {/* Filter Controls */}
-          <div className="flex flex-wrap gap-4 items-center">
+          {/* Search Fields */}
+          <div className="flex flex-wrap gap-4 items-center mb-4">
+            <label className="text-gray-700 font-medium">Filter by state:</label>
+            <select
+              value={selectedState}
+              onChange={e => setSelectedState(e.target.value)}
+              className="input-field max-w-xs"
+            >
+              {states.map(state => (
+                <option key={state} value={state}>
+                  {state === 'all' ? 'All States' : state}
+                </option>
+              ))}
+            </select>
+
             <label className="text-gray-700 font-medium">Filter by variety:</label>
             <select
               value={selectedVariety}
-              onChange={(e) => setSelectedVariety(e.target.value)}
+              onChange={e => setSelectedVariety(e.target.value)}
               className="input-field max-w-xs"
             >
               {durianVarieties.map(variety => (
@@ -193,6 +220,27 @@ const Map = () => {
                         Last updated: {new Date(stall.latestUpdate?.lastUpdated).toLocaleString()}
                       </p>
                     </div>
+
+                    {stall.latitude && stall.longitude && (
+                      <div className="flex gap-2 mt-3">
+                        <a
+                          href={`https://waze.com/ul?ll=${stall.latitude},${stall.longitude}&navigate=yes`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="btn-primary px-3 py-2 text-xs"
+                        >
+                          Open in Waze
+                        </a>
+                        <a
+                          href={`https://www.google.com/maps/search/?api=1&query=${stall.latitude},${stall.longitude}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="btn-secondary px-3 py-2 text-xs"
+                        >
+                          Open in Google Maps
+                        </a>
+                      </div>
+                    )}
                   </div>
                 </Popup>
               </Marker>

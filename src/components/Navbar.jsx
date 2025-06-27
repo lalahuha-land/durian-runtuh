@@ -1,9 +1,11 @@
 import { Link, useLocation } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
+import { useState } from 'react'
 
 const Navbar = () => {
   const { user, logout } = useAuth()
   const location = useLocation()
+  const [menuOpen, setMenuOpen] = useState(false)
 
   const isActive = (path) => location.pathname === path
 
@@ -36,14 +38,31 @@ const Navbar = () => {
             <span className="text-xl font-bold text-durian-primary">DurianRuntuh</span>
           </Link>
 
-          {/* Navigation Links */}
+          {/* Hamburger for mobile */}
+          <div className="md:hidden">
+            <button
+              onClick={() => setMenuOpen(!menuOpen)}
+              className="text-durian-primary focus:outline-none"
+              aria-label="Toggle menu"
+            >
+              <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                {menuOpen ? (
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                ) : (
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                )}
+              </svg>
+            </button>
+          </div>
+
+          {/* Navigation Links (desktop) */}
           <div className="hidden md:flex items-center space-x-8">
             {!user && (
               <Link
                 to="/"
                 className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                  isActive('/') 
-                    ? 'text-durian-primary bg-durian-light' 
+                  isActive('/')
+                    ? 'text-durian-primary bg-durian-light'
                     : 'text-gray-700 hover:text-durian-primary hover:bg-durian-light'
                 }`}
               >
@@ -53,8 +72,8 @@ const Navbar = () => {
             <Link
               to="/map"
               className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                isActive('/map') 
-                  ? 'text-durian-primary bg-durian-light' 
+                isActive('/map')
+                  ? 'text-durian-primary bg-durian-light'
                   : 'text-gray-700 hover:text-durian-primary hover:bg-durian-light'
               }`}
             >
@@ -62,10 +81,10 @@ const Navbar = () => {
             </Link>
           </div>
 
-          {/* Auth Buttons */}
-          <div className="flex items-center space-x-4">
+          {/* Auth Buttons (desktop) */}
+          <div className="hidden md:flex items-center space-x-4">
             {user ? (
-              <div className="flex items-center space-x-4">
+              <>
                 <Link
                   to="/dashboard"
                   className="text-sm text-gray-700 hover:text-durian-primary"
@@ -78,9 +97,9 @@ const Navbar = () => {
                 >
                   Logout
                 </button>
-              </div>
+              </>
             ) : (
-              <div className="flex items-center space-x-4">
+              <>
                 <Link
                   to="/login"
                   className="text-sm text-gray-700 hover:text-durian-primary"
@@ -93,10 +112,66 @@ const Navbar = () => {
                 >
                   Register Stall
                 </Link>
-              </div>
+              </>
             )}
           </div>
         </div>
+
+        {/* Mobile Menu */}
+        {menuOpen && (
+          <div className="md:hidden mt-2 space-y-2">
+            {!user && (
+              <Link
+                to="/"
+                className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-durian-primary hover:bg-durian-light"
+                onClick={() => setMenuOpen(false)}
+              >
+                Home
+              </Link>
+            )}
+            <Link
+              to="/map"
+              className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-durian-primary hover:bg-durian-light"
+              onClick={() => setMenuOpen(false)}
+            >
+              Find Durians
+            </Link>
+            {user ? (
+              <>
+                <Link
+                  to="/dashboard"
+                  className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-durian-primary"
+                  onClick={() => setMenuOpen(false)}
+                >
+                  Dashboard
+                </Link>
+                <button
+                  onClick={() => { logout(); setMenuOpen(false); }}
+                  className="block w-full text-left px-3 py-2 rounded-md text-base font-medium btn-secondary"
+                >
+                  Logout
+                </button>
+              </>
+            ) : (
+              <>
+                <Link
+                  to="/login"
+                  className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-durian-primary"
+                  onClick={() => setMenuOpen(false)}
+                >
+                  Login
+                </Link>
+                <Link
+                  to="/register"
+                  className="block px-3 py-2 rounded-md text-base font-medium btn-primary"
+                  onClick={() => setMenuOpen(false)}
+                >
+                  Register Stall
+                </Link>
+              </>
+            )}
+          </div>
+        )}
       </div>
     </nav>
   )

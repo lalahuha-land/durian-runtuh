@@ -6,6 +6,8 @@ import Map from './pages/Map'
 import Login from './pages/Login'
 import Register from './pages/Register'
 import StallDashboard from './pages/StallDashboard'
+import AdminLogin from './pages/AdminLogin'
+import AdminPanel from './pages/AdminPanel'
 
 // Protected Route Component
 const ProtectedRoute = ({ children }) => {
@@ -78,6 +80,8 @@ function AppRoutes() {
               <StallDashboard />
             </ProtectedRoute>
           } />
+          <Route path="/admin-login" element={<AdminLogin />} />
+          <Route path="/admin" element={<AdminPanel />} />
         </Routes>
       </main>
     </div>

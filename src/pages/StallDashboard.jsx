@@ -150,24 +150,6 @@ const StallDashboard = () => {
   return (
     <div className="min-h-screen bg-durian-cream py-8">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Stall Details Card */}
-        {stall ? (
-          <div className="card mb-6">
-            <h2 className="text-2xl font-bold text-durian-primary mb-2">{stall.name}</h2>
-            <p className="text-gray-700 mb-1"><strong>Address:</strong> {stall.address}</p>
-            <p className="text-gray-700 mb-1"><strong>Phone:</strong> {stall.phone}</p>
-            {stall.latitude && stall.longitude && (
-              <p className="text-gray-700 mb-1">
-                <strong>Location:</strong> {stall.latitude}, {stall.longitude}
-              </p>
-            )}
-          </div>
-        ) : (
-          <div className="text-red-600 font-semibold mb-6">
-            No stall found for your account.
-          </div>
-        )}
-
         {/* Latest Stock Update */}
         {stall?.latestUpdate && (
           <div className="card mb-6">
