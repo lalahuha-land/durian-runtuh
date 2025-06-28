@@ -18,14 +18,25 @@ exports.handler = async (event) => {
     return { statusCode: 401, body: JSON.stringify({ message: 'Invalid token' }) }
   }
 
-  // Fetch all stalls
+  // Fetch all stalls with their latest varieties
   const client = await pool.connect()
   try {
-    const result = await client.query('SELECT * FROM stalls')
+    const result = await client.query(`
+      SELECT s.*, 
+        (
+          SELECT varieties FROM daily_updates du
+          WHERE du.stall_id = s.id
+          ORDER BY du.last_updated DESC
+          LIMIT 1
+        ) as latest_varieties
+      FROM stalls s
+    `)
+    
     const stalls = result.rows.map(stall => ({
       ...stall,
-      varieties: stall.varieties ? JSON.parse(stall.varieties) : []
+      varieties: stall.latest_varieties || []
     }))
+    
     return { statusCode: 200, body: JSON.stringify(stalls) }
   } finally {
     client.release()

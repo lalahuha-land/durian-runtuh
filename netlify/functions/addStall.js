@@ -34,19 +34,38 @@ exports.handler = async (event) => {
   
   const client = await pool.connect()
   try {
-    // Create stall without owner_id
-    await client.query(
-      'INSERT INTO stalls (name, address, state, latitude, longitude, phone) VALUES ($1, $2, $3, $4, $5, $6)',
+    // Start transaction
+    await client.query('BEGIN')
+    
+    // Create stall
+    const stallResult = await client.query(
+      'INSERT INTO stalls (name, address, state, latitude, longitude, phone) VALUES ($1, $2, $3, $4, $5, $6) RETURNING id',
       [name, address, state, latitude, longitude, phone]
     )
+    
+    const stallId = stallResult.rows[0].id
+    
+    // Insert varieties if provided
+    if (varieties && varieties.length > 0) {
+      await client.query(
+        'INSERT INTO daily_updates (stall_id, varieties) VALUES ($1, $2)',
+        [stallId, varieties]
+      )
+    }
+    
+    // Commit transaction
+    await client.query('COMMIT')
     
     return { 
       statusCode: 200, 
       body: JSON.stringify({ 
-        message: 'Stall created successfully'
+        message: 'Stall created successfully',
+        stallId: stallId
       }) 
     }
   } catch (error) {
+    // Rollback transaction on error
+    await client.query('ROLLBACK')
     console.error('Add stall error:', error)
     return { 
       statusCode: 500, 
