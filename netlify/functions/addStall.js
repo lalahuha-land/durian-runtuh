@@ -37,6 +37,17 @@ exports.handler = async (event) => {
     // Start transaction
     await client.query('BEGIN')
     
+    // Ensure daily_updates table exists
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS daily_updates (
+        id SERIAL PRIMARY KEY,
+        stall_id INTEGER NOT NULL,
+        varieties JSONB NOT NULL,
+        last_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (stall_id) REFERENCES stalls (id) ON DELETE CASCADE
+      )
+    `)
+    
     // Create stall
     const stallResult = await client.query(
       'INSERT INTO stalls (name, address, state, latitude, longitude, phone) VALUES ($1, $2, $3, $4, $5, $6) RETURNING id',

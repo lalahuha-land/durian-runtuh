@@ -21,6 +21,17 @@ exports.handler = async (event) => {
   // Fetch all stalls with their latest varieties
   const client = await pool.connect()
   try {
+    // First, ensure daily_updates table exists
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS daily_updates (
+        id SERIAL PRIMARY KEY,
+        stall_id INTEGER NOT NULL,
+        varieties JSONB NOT NULL,
+        last_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (stall_id) REFERENCES stalls (id) ON DELETE CASCADE
+      )
+    `)
+    
     const result = await client.query(`
       SELECT s.*, 
         (
