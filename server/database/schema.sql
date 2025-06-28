@@ -6,6 +6,7 @@ CREATE TABLE IF NOT EXISTS stalls (
   id SERIAL PRIMARY KEY,
   name VARCHAR(255) NOT NULL,
   address TEXT NOT NULL,
+  state VARCHAR(100),
   latitude DECIMAL(10, 8),
   longitude DECIMAL(11, 8),
   phone VARCHAR(50),
@@ -28,8 +29,8 @@ CREATE INDEX IF NOT EXISTS idx_daily_updates_stall ON daily_updates(stall_id);
 CREATE INDEX IF NOT EXISTS idx_daily_updates_date ON daily_updates(last_updated);
 
 -- Insert sample data
-INSERT INTO stalls (name, address, phone) VALUES 
-  ('Durian King Stall', 'Jalan Sultan, Kuala Lumpur', '+60 12-345 6789')
+INSERT INTO stalls (name, address, state, phone) VALUES 
+  ('Durian King Stall', 'Jalan Sultan, Kuala Lumpur', 'Kuala Lumpur', '+60 12-345 6789')
 ON CONFLICT DO NOTHING;
 
 -- Insert sample daily update

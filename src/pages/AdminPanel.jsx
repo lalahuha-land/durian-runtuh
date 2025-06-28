@@ -120,12 +120,40 @@ const AdminPanel = () => {
     setFormState({ ...formState, varieties: formState.varieties.filter((_, i) => i !== idx) })
   }
 
+  // Run Migration
+  const handleMigration = async () => {
+    setError('')
+    try {
+      await axios.post('/.netlify/functions/migrate', {}, {
+        headers: { Authorization: `Bearer ${localStorage.getItem('adminToken')}` }
+      })
+      alert('Migration completed successfully!')
+      fetchStalls()
+    } catch (err) {
+      setError('Migration failed: ' + (err.response?.data?.message || err.message))
+    }
+  }
+
   if (loading) return <div>Loading...</div>
 
   return (
     <div className="max-w-3xl mx-auto py-8">
       <h1 className="text-2xl font-bold mb-4">Admin Panel</h1>
       {error && <div className="bg-red-100 text-red-700 p-2 rounded mb-4">{error}</div>}
+
+      {/* Migration Button */}
+      <div className="card mb-6">
+        <h2 className="text-lg font-semibold text-durian-primary mb-4">Database Migration</h2>
+        <p className="text-gray-600 mb-4">
+          If you're getting database errors, run this migration to update your database schema.
+        </p>
+        <button 
+          onClick={handleMigration} 
+          className="btn-primary"
+        >
+          Run Database Migration
+        </button>
+      </div>
 
       {/* Add Stall Form */}
       <form className="card mb-6 space-y-4" onSubmit={handleAdd}>

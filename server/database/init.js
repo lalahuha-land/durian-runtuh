@@ -25,6 +25,7 @@ async function createTables() {
         id SERIAL PRIMARY KEY,
         name VARCHAR(255) NOT NULL,
         address TEXT NOT NULL,
+        state VARCHAR(100),
         latitude DECIMAL(10, 8),
         longitude DECIMAL(11, 8),
         phone VARCHAR(50),
@@ -68,9 +69,9 @@ async function insertSampleData() {
 
     // Insert sample stall
     const stallResult = await client.query(`
-      INSERT INTO stalls (name, address, phone) 
-      VALUES ($1, $2, $3) RETURNING id
-    `, ['Durian King Stall', 'Jalan Sultan, Kuala Lumpur', '+60 12-345 6789'])
+      INSERT INTO stalls (name, address, state, phone) 
+      VALUES ($1, $2, $3, $4) RETURNING id
+    `, ['Durian King Stall', 'Jalan Sultan, Kuala Lumpur', 'Kuala Lumpur', '+60 12-345 6789'])
 
     // Insert sample daily update
     const sampleVarieties = [
