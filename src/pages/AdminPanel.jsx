@@ -130,14 +130,21 @@ const AdminPanel = () => {
       {/* Add Stall Form */}
       <form className="card mb-6 space-y-4" onSubmit={handleAdd}>
         <h2 className="text-lg font-semibold text-durian-primary">Add New Stall</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <input className="input-field" placeholder="Name" value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} required />
-          <input className="input-field" placeholder="State" value={form.state} onChange={e => setForm({ ...form, state: e.target.value })} required />
-          <input className="input-field" placeholder="Address" value={form.address} onChange={e => setForm({ ...form, address: e.target.value })} required />
-          <input className="input-field" placeholder="Phone" value={form.phone} onChange={e => setForm({ ...form, phone: e.target.value })} />
-          <input className="input-field" placeholder="Latitude" value={form.latitude} onChange={e => setForm({ ...form, latitude: e.target.value })} />
-          <input className="input-field" placeholder="Longitude" value={form.longitude} onChange={e => setForm({ ...form, longitude: e.target.value })} />
+        
+        {/* Stall Information */}
+        <div>
+          <h3 className="font-semibold text-durian-primary mb-2">Stall Information</h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <input className="input-field" placeholder="Stall Name" value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} required />
+            <input className="input-field" placeholder="State" value={form.state} onChange={e => setForm({ ...form, state: e.target.value })} required />
+            <input className="input-field" placeholder="Address" value={form.address} onChange={e => setForm({ ...form, address: e.target.value })} required />
+            <input className="input-field" placeholder="Phone" value={form.phone} onChange={e => setForm({ ...form, phone: e.target.value })} />
+            <input className="input-field" placeholder="Latitude" value={form.latitude} onChange={e => setForm({ ...form, latitude: e.target.value })} />
+            <input className="input-field" placeholder="Longitude" value={form.longitude} onChange={e => setForm({ ...form, longitude: e.target.value })} />
+          </div>
         </div>
+
+        {/* Durian Varieties */}
         <div>
           <h3 className="font-semibold text-durian-primary">Durian Varieties</h3>
           {form.varieties.map((variety, idx) => (
@@ -180,47 +187,16 @@ const AdminPanel = () => {
           <li key={stall.id} className="card flex flex-col sm:flex-row sm:items-center sm:justify-between">
             {editId === stall.id ? (
               <form className="flex-1 space-y-2 sm:space-y-0 sm:flex sm:gap-2 flex-wrap" onSubmit={handleEditSubmit}>
-                <input className="input-field" placeholder="Name" value={editForm.name} onChange={e => setEditForm({ ...editForm, name: e.target.value })} required />
+                {/* Stall Information */}
+                <input className="input-field" placeholder="Stall Name" value={editForm.name} onChange={e => setEditForm({ ...editForm, name: e.target.value })} required />
                 <input className="input-field" placeholder="State" value={editForm.state} onChange={e => setEditForm({ ...editForm, state: e.target.value })} required />
                 <input className="input-field" placeholder="Address" value={editForm.address} onChange={e => setEditForm({ ...editForm, address: e.target.value })} required />
                 <input className="input-field" placeholder="Phone" value={editForm.phone} onChange={e => setEditForm({ ...editForm, phone: e.target.value })} />
                 <input className="input-field" placeholder="Latitude" value={editForm.latitude} onChange={e => setEditForm({ ...editForm, latitude: e.target.value })} />
                 <input className="input-field" placeholder="Longitude" value={editForm.longitude} onChange={e => setEditForm({ ...editForm, longitude: e.target.value })} />
-                <div className="w-full">
-                  <h3 className="font-semibold text-durian-primary">Durian Varieties</h3>
-                  {editForm.varieties.map((variety, idx) => (
-                    <div key={idx} className="flex gap-2 mb-2 flex-wrap">
-                      <input
-                        className="input-field"
-                        placeholder="Variety Name"
-                        value={variety.name}
-                        onChange={e => handleVarietyChange(editForm, setEditForm, idx, 'name', e.target.value)}
-                        required
-                      />
-                      <input
-                        className="input-field"
-                        placeholder="Price"
-                        value={variety.price}
-                        onChange={e => handleVarietyChange(editForm, setEditForm, idx, 'price', e.target.value)}
-                        required
-                      />
-                      <select
-                        className="input-field"
-                        value={variety.stock}
-                        onChange={e => handleVarietyChange(editForm, setEditForm, idx, 'stock', e.target.value)}
-                      >
-                        <option value="high">High</option>
-                        <option value="medium">Medium</option>
-                        <option value="low">Low</option>
-                        <option value="sold-out">Sold Out</option>
-                      </select>
-                      <button type="button" className="btn-secondary" onClick={() => handleRemoveVariety(editForm, setEditForm, idx)}>Remove</button>
-                    </div>
-                  ))}
-                  <button type="button" className="btn-primary mt-2" onClick={() => handleAddVariety(editForm, setEditForm)}>Add Variety</button>
-                </div>
+                
                 <button type="submit" className="btn-primary">Save</button>
-                <button type="button" className="btn-secondary" onClick={() => setEditId(null)}>Cancel</button>
+                <button type="button" className="btn-secondary" onClick={() => { setEditId(null); setEditForm(initialForm) }}>Cancel</button>
               </form>
             ) : (
               <>

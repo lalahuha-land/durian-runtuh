@@ -21,12 +21,6 @@ const Home = () => {
               >
                 Find Durians Now
               </Link>
-              <Link
-                to="/register"
-                className="border-2 border-white text-white font-bold py-3 px-8 rounded-lg text-lg hover:bg-white hover:text-durian-primary transition-colors"
-              >
-                Register Your Stall
-              </Link>
             </div>
           </div>
         </div>
@@ -130,12 +124,6 @@ const Home = () => {
               className="bg-durian-yellow text-durian-primary font-bold py-3 px-8 rounded-lg text-lg hover:bg-yellow-300 transition-colors"
             >
               Start Exploring Now
-            </Link>
-            <Link
-              to="/register"
-              className="border-2 border-white text-white font-bold py-3 px-8 rounded-lg text-lg hover:bg-white hover:text-durian-primary transition-colors"
-            >
-              Register Your Stall
             </Link>
           </div>
         </div>

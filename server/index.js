@@ -6,7 +6,6 @@ import { fileURLToPath } from 'url'
 import { dirname, join } from 'path'
 
 // Import routes
-import authRoutes from './routes/auth.js'
 import stallRoutes from './routes/stalls.js'
 
 // Import database initialization
@@ -33,7 +32,6 @@ app.use(express.urlencoded({ extended: true }))
 initDatabase()
 
 // Routes
-app.use('/api/auth', authRoutes)
 app.use('/api/stalls', stallRoutes)
 
 // Health check endpoint

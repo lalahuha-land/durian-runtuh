@@ -10,6 +10,7 @@ exports.handler = async (event) => {
   if (event.httpMethod !== 'POST') {
     return { statusCode: 405, body: JSON.stringify({ message: 'Method Not Allowed' }) }
   }
+  
   // Check admin JWT
   const authHeader = event.headers.authorization || ''
   const token = authHeader.split(' ')[1]
@@ -21,14 +22,36 @@ exports.handler = async (event) => {
     return { statusCode: 401, body: JSON.stringify({ message: 'Invalid token' }) }
   }
 
-  const { name, address, state, latitude, longitude, phone, varieties } = JSON.parse(event.body)
+  const { 
+    name, 
+    address, 
+    state, 
+    latitude, 
+    longitude, 
+    phone, 
+    varieties
+  } = JSON.parse(event.body)
+  
   const client = await pool.connect()
   try {
+    // Create stall without owner_id
     await client.query(
-      'INSERT INTO stalls (name, address, state, latitude, longitude, phone, varieties) VALUES ($1, $2, $3, $4, $5, $6, $7)',
-      [name, address, state, latitude, longitude, phone, JSON.stringify(varieties)]
+      'INSERT INTO stalls (name, address, state, latitude, longitude, phone) VALUES ($1, $2, $3, $4, $5, $6)',
+      [name, address, state, latitude, longitude, phone]
     )
-    return { statusCode: 200, body: JSON.stringify({ message: 'Stall added' }) }
+    
+    return { 
+      statusCode: 200, 
+      body: JSON.stringify({ 
+        message: 'Stall created successfully'
+      }) 
+    }
+  } catch (error) {
+    console.error('Add stall error:', error)
+    return { 
+      statusCode: 500, 
+      body: JSON.stringify({ message: 'Failed to create stall' }) 
+    }
   } finally {
     client.release()
   }

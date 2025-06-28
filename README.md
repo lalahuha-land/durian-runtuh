@@ -7,6 +7,7 @@ Find Fresh Durians Near You. The ultimate app for durian lovers. Check stock and
 ### Prerequisites
 - Node.js (v16 or higher)
 - npm or yarn
+- PostgreSQL database (local or cloud)
 
 ### Installation
 
@@ -22,9 +23,22 @@ NODE_ENV=development
 JWT_SECRET=durian-runtuh-secret-key-2024
 FRONTEND_URL=http://localhost:3000
 PORT=5000
+ADMIN_PASSWORD=your-admin-password
+DATABASE_URL=postgresql://username:password@localhost:5432/durian_runtuh
 ```
 
-3. **Start the development servers:**
+3. **Set up PostgreSQL database:**
+```bash
+# Create database
+createdb durian_runtuh
+
+# Or using psql
+psql -U postgres
+CREATE DATABASE durian_runtuh;
+\q
+```
+
+4. **Start the development servers:**
 ```bash
 # Start both frontend and backend
 npm run dev:full
@@ -44,48 +58,28 @@ npm run server
 - Verify the homepage loads with durian theme
 - Test navigation between pages
 - Check mobile responsiveness
-- Note: Home page is only accessible to non-logged-in users
 
-### 2. **Stall Owner Registration**
-- Click "Register Stall" button in navbar
-- Fill out the registration form:
-  - **Name:** Test Owner
-  - **Email:** test@durianruntuh.com
-  - **Password:** test123456
-  - **Phone:** +60 12-345 6789
-  - **Stall Name:** Test Durian Stall
-  - **Address:** 123 Test Street, KL
-- Submit and verify you're redirected to dashboard
+### 2. **Admin Panel - Stall Management**
+- Go to http://localhost:3000/admin-login
+- Login with admin credentials:
+  - **Username:** admin
+  - **Password:** (set in ADMIN_PASSWORD environment variable)
+- Access the admin panel at http://localhost:3000/admin
+- Test adding a new stall:
+  - Fill in stall information (name, address, coordinates)
+  - Add durian varieties with prices and stock levels
+- Test editing existing stalls
+- Test deleting stalls
 
-### 3. **Stall Owner Dashboard (Protected Access)**
-- Verify stall information is displayed
-- Click "Edit Stall Info" to update stall details
-- Add coordinates (optional) to help customers find your stall
-- Test the stock update form:
-  - Enable "Musang King" and set price to RM45
-  - Enable "Black Thorn" and set price to RM35
-  - Set stock levels to "High"
-  - Submit the form
-- Verify success message appears
-- Check "Last updated" timestamp updates
-
-### 4. **Login/Logout Flow**
-- Logout from dashboard (redirects to home page)
-- Click "Login" in navbar
-- Login with your registered email and password
-- Verify you're redirected to dashboard
-- Try accessing home page when logged in (should redirect to dashboard)
-- Try accessing dashboard without being logged in (should redirect to login)
-
-### 5. **Map View (Public Access)**
+### 3. **Map View (Public Access)**
 - Go to "Find Durians" page
 - Verify the map loads with OpenStreetMap
-- Check that your stall appears on the map
-- Click on the stall marker to see details
+- Check that stalls appear on the map
+- Click on stall markers to see details
 - Test filtering by durian variety
 - Verify stock and price information is correct
 
-### 6. **Mobile Testing**
+### 4. **Mobile Testing**
 - Test on mobile device or browser dev tools
 - Verify responsive design works
 - Test touch interactions on map
@@ -95,24 +89,24 @@ npm run server
 ### **Public Pages (No Login Required):**
 - Home page (landing page)
 - Map page (find durians)
-- Login page
-- Register page
 
-### **Protected Pages (Login Required):**
-- Dashboard (stall management)
+### **Admin Pages (Admin Only):**
+- Admin login
+- Admin panel (stall CRUD operations)
 
 ### **Access Rules:**
-- Logged-in users are automatically redirected to dashboard
-- Non-logged-in users trying to access dashboard are redirected to login
-- Home page is hidden from logged-in users in navigation
+- Only admins can create, edit, and delete stalls
+- Public users can view stalls on the map
+- No user registration or login required for public access
 
 ## 🐛 Troubleshooting
 
 ### Common Issues:
 
-1. **Database not found:**
-   - The SQLite database will be created automatically on first run
-   - Check that `durian-runtuh.db` file exists in root directory
+1. **Database connection failed:**
+   - Verify DATABASE_URL is correct
+   - Check PostgreSQL is running
+   - Ensure database exists: `createdb durian_runtuh`
 
 2. **Port already in use:**
    - Change PORT in `.env` file
@@ -126,16 +120,21 @@ npm run server
    - Check browser console for errors
    - Verify internet connection (map tiles from OpenStreetMap)
 
+5. **Admin login issues:**
+   - Verify ADMIN_PASSWORD is set in environment variables
+   - Default admin username is 'admin'
+
 ### API Endpoints:
 
 - `GET /api/health` - Health check
-- `POST /api/auth/register` - Register new stall owner
-- `POST /api/auth/login` - Login stall owner
-- `GET /api/auth/me` - Get current user (protected)
 - `GET /api/stalls` - Get all stalls for map
-- `GET /api/stalls/my-stall` - Get user's stall (protected)
-- `PUT /api/stalls/update-stall` - Update stall information (protected)
-- `POST /api/stalls/update-stock` - Update daily stock (protected)
+
+### Admin API Endpoints (Netlify Functions):
+- `POST /.netlify/functions/adminLogin` - Admin login
+- `GET /.netlify/functions/getAllStalls` - Get all stalls (admin)
+- `POST /.netlify/functions/addStall` - Add new stall (admin)
+- `PUT /.netlify/functions/editStall` - Edit stall (admin)
+- `DELETE /.netlify/functions/deleteStall` - Delete stall (admin)
 
 ## 🎨 Design Theme
 
@@ -154,36 +153,145 @@ The app uses a custom durian-themed color palette:
 - Real-time stock and price information
 - Mobile-friendly interface
 
-### For Stall Owners:
-- Simple registration process
-- Login to access dashboard
-- Update stall information and coordinates
-- Easy daily stock updates
-- Mobile-optimized dashboard
-- Real-time visibility on map
-- Protected access to management features
+### For Admins:
+- Secure admin login
+- Create, edit, and delete stalls
+- Manage all stall information and coordinates
+- Full CRUD operations on stalls
 
-## 🚀 Deployment
+## 🚀 Deployment (Netlify + PostgreSQL)
 
-### Frontend (Vercel/Netlify):
+### **Step 1: Set up PostgreSQL Database**
+
+Choose one of these PostgreSQL providers:
+
+#### **Option A: Supabase (Recommended)**
+1. Go to [supabase.com](https://supabase.com)
+2. Create a new project
+3. Go to Settings → Database
+4. Copy the connection string
+5. Format: `postgresql://postgres:[password]@db.[project].supabase.co:5432/postgres`
+
+#### **Option B: Railway**
+1. Go to [railway.app](https://railway.app)
+2. Create a new project
+3. Add PostgreSQL service
+4. Copy the connection string from the service
+
+#### **Option C: Neon**
+1. Go to [neon.tech](https://neon.tech)
+2. Create a new project
+3. Copy the connection string from the dashboard
+
+### **Step 2: Deploy to Netlify**
+
+#### **Method A: Deploy from GitHub**
+1. Push your code to GitHub
+2. Go to [netlify.com](https://netlify.com)
+3. Click "New site from Git"
+4. Connect your GitHub repository
+5. Set build settings:
+   - **Build command:** `npm run build`
+   - **Publish directory:** `dist`
+6. Click "Deploy site"
+
+#### **Method B: Deploy from local files**
 ```bash
+# Install Netlify CLI
+npm install -g netlify-cli
+
+# Build the project
 npm run build
-# Deploy dist/ folder
+
+# Deploy to Netlify
+netlify deploy --prod --dir=dist
 ```
 
-### Backend (Railway/Fly.io):
+### **Step 3: Configure Environment Variables**
+
+In your Netlify dashboard:
+1. Go to Site settings → Environment variables
+2. Add these variables:
+   ```
+   NODE_ENV=production
+   JWT_SECRET=your-super-secure-jwt-secret
+   ADMIN_PASSWORD=your-secure-admin-password
+   DATABASE_URL=your-postgresql-connection-string
+   ```
+
+### **Step 4: Update Frontend API URLs**
+
+Update `src/pages/Map.jsx` to use Netlify Functions:
+```javascript
+// Change from local API to Netlify Functions
+const response = await axios.get('/.netlify/functions/getStalls')
+```
+
+### **Step 5: Test Deployment**
+
+1. Visit your Netlify site URL
+2. Test the map functionality
+3. Test admin login at `your-site.netlify.app/admin-login`
+4. Verify all features work correctly
+
+## 📊 Database Schema (PostgreSQL)
+
+### **stalls** table:
+```sql
+CREATE TABLE stalls (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(255) NOT NULL,
+  address TEXT NOT NULL,
+  latitude DECIMAL(10, 8),
+  longitude DECIMAL(11, 8),
+  phone VARCHAR(50),
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+```
+
+### **daily_updates** table:
+```sql
+CREATE TABLE daily_updates (
+  id SERIAL PRIMARY KEY,
+  stall_id INTEGER NOT NULL,
+  varieties JSONB NOT NULL,
+  last_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (stall_id) REFERENCES stalls (id) ON DELETE CASCADE
+);
+```
+
+### **Indexes:**
+```sql
+CREATE INDEX idx_stalls_location ON stalls(latitude, longitude);
+CREATE INDEX idx_daily_updates_stall ON daily_updates(stall_id);
+CREATE INDEX idx_daily_updates_date ON daily_updates(last_updated);
+```
+
+## 🛠️ Development
+
+### **Local Development:**
 ```bash
-# Set production environment variables
-NODE_ENV=production
-JWT_SECRET=your-secure-secret
-FRONTEND_URL=https://your-domain.com
+# Install dependencies
+npm install
+
+# Set up environment
+cp env.example .env
+# Edit .env with your database URL
+
+# Start development servers
+npm run dev:full
 ```
 
-## 📊 Database Schema
+### **Database Setup:**
+Tables are created automatically on first run. For manual setup:
+```bash
+# Connect to your database
+psql $DATABASE_URL
 
-- **users:** User accounts and authentication
-- **stalls:** Stall information and location
-- **daily_updates:** Daily stock updates with varieties and prices
+# Run schema (optional - auto-created)
+\i server/database/schema.sql
+```
 
 ## 🤝 Contributing
 
