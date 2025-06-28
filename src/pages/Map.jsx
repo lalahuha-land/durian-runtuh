@@ -1,6 +1,41 @@
 import { useState, useEffect } from 'react'
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
+import L from 'leaflet'
 import axios from 'axios'
+
+// Custom SVG marker icon
+const createCustomIcon = () => {
+  return L.divIcon({
+    html: `
+      <div style="
+        width: 32px; 
+        height: 32px; 
+        background: #007852; 
+        border: 3px solid #01AF5E; 
+        border-radius: 50% 50% 50% 0; 
+        transform: rotate(-45deg); 
+        position: relative;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+      ">
+        <div style="
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%) rotate(45deg);
+          color: white;
+          font-weight: bold;
+          font-size: 16px;
+        ">🌰</div>
+      </div>
+    `,
+    className: 'custom-marker',
+    iconSize: [32, 32],
+    iconAnchor: [16, 32],
+    popupAnchor: [0, -32]
+  })
+}
+
+const customIcon = createCustomIcon()
 
 const Map = () => {
   const [stalls, setStalls] = useState([])
@@ -207,6 +242,7 @@ const Map = () => {
                 <Marker
                   key={stall.id}
                   position={[stall.latitude, stall.longitude]}
+                  icon={customIcon}
                 >
                   <Popup>
                     <div className="p-2">

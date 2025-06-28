@@ -27,6 +27,20 @@
   }
 }
 
+/* Custom marker styles */
+.custom-marker {
+  background: transparent !important;
+  border: none !important;
+}
+
+.custom-marker div {
+  transition: transform 0.2s ease;
+}
+
+.custom-marker:hover div {
+  transform: scale(1.1) rotate(-45deg);
+}
+
 /* Custom scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
