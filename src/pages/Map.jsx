@@ -49,6 +49,7 @@ const Map = () => {
   const fetchStalls = async () => {
     try {
       const response = await axios.get('/.netlify/functions/getStalls')
+      console.log('Fetched stalls:', response.data) // Debug log
       setStalls(response.data)
     } catch (error) {
       console.error('Error fetching stalls:', error)
@@ -60,6 +61,7 @@ const Map = () => {
           latitude: 3.1390,
           longitude: 101.6869,
           address: 'Jalan Sultan, Kuala Lumpur',
+          state: 'Selangor',
           phone: '+60 12-345 6789',
           latestUpdate: {
             varieties: [
@@ -76,6 +78,7 @@ const Map = () => {
           latitude: 3.1450,
           longitude: 101.6900,
           address: 'Petaling Street, KL',
+          state: 'Selangor',
           phone: '+60 12-345 6790',
           latestUpdate: {
             varieties: [
@@ -98,6 +101,15 @@ const Map = () => {
       stall.latestUpdate?.varieties?.some(
         v => v.name === selectedVariety && v.stock !== 'sold-out'
       );
+    
+    // Debug logging
+    if (selectedState !== 'all' && !matchesState) {
+      console.log(`Stall ${stall.name} filtered out by state: ${stall.state} !== ${selectedState}`)
+    }
+    if (selectedVariety !== 'all' && !matchesVariety) {
+      console.log(`Stall ${stall.name} filtered out by variety: ${selectedVariety}`)
+    }
+    
     return matchesState && matchesVariety;
   });
 
@@ -184,67 +196,75 @@ const Map = () => {
               attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             />
             
-            {filteredStalls.map((stall) => (
-              <Marker
-                key={stall.id}
-                position={[stall.latitude, stall.longitude]}
-              >
-                <Popup>
-                  <div className="p-2">
-                    <h3 className="font-bold text-durian-primary text-lg mb-2">
-                      {stall.name}
-                    </h3>
-                    <p className="text-gray-600 text-sm mb-2">{stall.address}</p>
-                    <p className="text-gray-600 text-sm mb-3">📞 {stall.phone}</p>
-                    
-                    <div className="space-y-2">
-                      <h4 className="font-semibold text-gray-800">Available Varieties:</h4>
-                      {stall.latestUpdate?.varieties?.map((variety, index) => (
-                        <div key={index} className="flex justify-between items-center text-sm">
-                          <span className="font-medium">{variety.name}</span>
-                          <div className="text-right">
-                            <span className="font-bold text-durian-primary">
-                              RM{variety.price}/kg
-                            </span>
-                            <br />
-                            <span className={getStockColor(variety.stock)}>
-                              {getStockText(variety.stock)}
-                            </span>
+            {filteredStalls.map((stall) => {
+              // Skip stalls without valid coordinates
+              if (!stall.latitude || !stall.longitude) {
+                console.warn(`Stall ${stall.name} missing coordinates:`, stall)
+                return null
+              }
+              
+              return (
+                <Marker
+                  key={stall.id}
+                  position={[stall.latitude, stall.longitude]}
+                >
+                  <Popup>
+                    <div className="p-2">
+                      <h3 className="font-bold text-durian-primary text-lg mb-2">
+                        {stall.name}
+                      </h3>
+                      <p className="text-gray-600 text-sm mb-2">{stall.address}</p>
+                      <p className="text-gray-600 text-sm mb-3">📞 {stall.phone}</p>
+                      
+                      <div className="space-y-2">
+                        <h4 className="font-semibold text-gray-800">Available Varieties:</h4>
+                        {stall.latestUpdate?.varieties?.map((variety, index) => (
+                          <div key={index} className="flex justify-between items-center text-sm">
+                            <span className="font-medium">{variety.name}</span>
+                            <div className="text-right">
+                              <span className="font-bold text-durian-primary">
+                                RM{variety.price}/kg
+                              </span>
+                              <br />
+                              <span className={getStockColor(variety.stock)}>
+                                {getStockText(variety.stock)}
+                              </span>
+                            </div>
                           </div>
-                        </div>
-                      ))}
-                    </div>
-                    
-                    <div className="mt-3 pt-2 border-t border-gray-200">
-                      <p className="text-xs text-gray-500">
-                        Last updated: {new Date(stall.latestUpdate?.lastUpdated).toLocaleString()}
-                      </p>
-                    </div>
-
-                    {stall.latitude && stall.longitude && (
-                      <div className="flex gap-2 mt-3">
-                        <a
-                          href={`https://waze.com/ul?ll=${stall.latitude},${stall.longitude}&navigate=yes`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="btn-primary px-3 py-2 text-xs"
-                        >
-                          Open in Waze
-                        </a>
-                        <a
-                          href={`https://www.google.com/maps/search/?api=1&query=${stall.latitude},${stall.longitude}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="btn-secondary px-3 py-2 text-xs"
-                        >
-                          Open in Google Maps
-                        </a>
+                        ))}
                       </div>
-                    )}
-                  </div>
-                </Popup>
-              </Marker>
-            ))}
+                      
+                      <div className="mt-3 pt-2 border-t border-gray-200">
+                        <p className="text-xs text-gray-500">
+                          Last updated: {new Date(stall.latestUpdate?.lastUpdated).toLocaleString()}
+                        </p>
+                      </div>
+
+                      {stall.latitude && stall.longitude && (
+                        <div className="flex gap-2 mt-3">
+                          <a
+                            href={`https://waze.com/ul?ll=${stall.latitude},${stall.longitude}&navigate=yes`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="btn-primary px-3 py-2 text-xs"
+                          >
+                            Open in Waze
+                          </a>
+                          <a
+                            href={`https://www.google.com/maps/search/?api=1&query=${stall.latitude},${stall.longitude}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="btn-secondary px-3 py-2 text-xs"
+                          >
+                            Open in Google Maps
+                          </a>
+                        </div>
+                      )}
+                    </div>
+                  </Popup>
+                </Marker>
+              )
+            })}
           </MapContainer>
         </div>
 
