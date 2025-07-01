@@ -56,11 +56,16 @@ exports.handler = async (event) => {
     
     const stallId = stallResult.rows[0].id
     
+    let cleanVarieties = []
+    if (Array.isArray(varieties)) {
+      cleanVarieties = varieties.map(v => ({ name: v.name, stock: v.stock }))
+    }
+    
     // Insert varieties if provided
-    if (varieties && varieties.length > 0) {
+    if (cleanVarieties.length > 0) {
       await client.query(
         'INSERT INTO daily_updates (stall_id, varieties) VALUES ($1, $2)',
-        [stallId, varieties]
+        [stallId, cleanVarieties]
       )
     }
     

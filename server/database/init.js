@@ -75,9 +75,9 @@ async function insertSampleData() {
 
     // Insert sample daily update
     const sampleVarieties = [
-      { name: 'Musang King', price: 45, stock: 'high' },
-      { name: 'Black Thorn', price: 35, stock: 'medium' },
-      { name: 'D24 Sultan', price: 25, stock: 'low' }
+      { name: 'Musang King', stock: 'high' },
+      { name: 'Black Thorn', stock: 'medium' },
+      { name: 'D24 Sultan', stock: 'low' }
     ]
 
     await client.query(`

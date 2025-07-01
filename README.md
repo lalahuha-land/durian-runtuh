@@ -150,7 +150,7 @@ The app uses a custom durian-themed color palette:
 ### For Customers:
 - Interactive map showing durian stalls
 - Filter by durian variety
-- Real-time stock and price information
+- Real-time stock information
 - Mobile-friendly interface
 
 ### For Admins:
@@ -342,47 +342,8 @@ CREATE TABLE IF NOT EXISTS stalls (
   latitude REAL,
   longitude REAL,
   phone TEXT,
-  varieties TEXT, -- JSON string: array of {name, price, stock}
+  varieties TEXT, -- JSON string: array of {name, stock}
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 ```
-
-### 4. Environment Variables
-Set these in your `.env` (for local) and in Netlify dashboard:
-- `DATABASE_URL` — your PostgreSQL connection string
-- `JWT_SECRET` — a long random string
-- `ADMIN_PASSWORD` — your chosen admin password
-
-### 5. Netlify Functions
-- All backend logic is in `/netlify/functions/` (addStall, editStall, deleteStall, getAllStalls, adminLogin, etc.)
-- Functions require a valid admin JWT for stall management endpoints.
-
-### 6. Running Locally
-```bash
-npm run dev
-# In another terminal (if needed):
-netlify dev
-```
-
-### 7. Deployment
-- Deploy to Netlify for frontend and serverless backend.
-- Set environment variables in Netlify dashboard.
-
-## Admin Usage
-- Go to `/admin-login` to log in as admin.
-- After login, access `/admin` to manage stalls and varieties.
-- Only admin can add, edit, or delete stalls and varieties.
-
-## Customer Usage
-- Customers can search for stalls by state and durian variety on the map.
-- Click a stall to view details and open navigation in Waze or Google Maps.
-
-## Tech Stack
-- React + Vite (frontend)
-- Tailwind CSS (styling)
-- Netlify Functions (backend)
-- PostgreSQL (database)
-
-## License
-GPL-3.0 

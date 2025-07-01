@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 
-const initialVariety = { name: '', price: '', stock: 'high' }
+const initialVariety = { name: '', stock: 'high' }
 const initialForm = {
   name: '',
   address: '',
@@ -184,13 +184,6 @@ const AdminPanel = () => {
                 onChange={e => handleVarietyChange(form, setForm, idx, 'name', e.target.value)}
                 required
               />
-              <input
-                className="input-field"
-                placeholder="Price"
-                value={variety.price}
-                onChange={e => handleVarietyChange(form, setForm, idx, 'price', e.target.value)}
-                required
-              />
               <select
                 className="input-field"
                 value={variety.stock}
@@ -240,13 +233,6 @@ const AdminPanel = () => {
                         onChange={e => handleVarietyChange(editForm, setEditForm, idx, 'name', e.target.value)}
                         required
                       />
-                      <input
-                        className="input-field"
-                        placeholder="Price"
-                        value={variety.price}
-                        onChange={e => handleVarietyChange(editForm, setEditForm, idx, 'price', e.target.value)}
-                        required
-                      />
                       <select
                         className="input-field"
                         value={variety.stock}
@@ -280,7 +266,7 @@ const AdminPanel = () => {
                     <ul className="list-disc ml-5">
                       {stall.varieties && stall.varieties.length > 0 ? (
                         stall.varieties.map((v, i) => (
-                          <li key={i}>{v.name} - RM{v.price} ({v.stock})</li>
+                          <li key={i}>{v.name} ({v.stock})</li>
                         ))
                       ) : (
                         <li>No varieties listed</li>

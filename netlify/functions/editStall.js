@@ -44,8 +44,13 @@ exports.handler = async (event) => {
       [name, address, state, latitude, longitude, phone, id]
     )
     
+    let cleanVarieties = []
+    if (Array.isArray(varieties)) {
+      cleanVarieties = varieties.map(v => ({ name: v.name, stock: v.stock }))
+    }
+    
     // Update or insert daily update with varieties
-    if (varieties && varieties.length > 0) {
+    if (cleanVarieties.length > 0) {
       // Check if daily_updates table exists, create if not
       await client.query(`
         CREATE TABLE IF NOT EXISTS daily_updates (
@@ -59,7 +64,7 @@ exports.handler = async (event) => {
       // Insert new daily update
       await client.query(
         'INSERT INTO daily_updates (stall_id, varieties) VALUES ($1, $2)',
-        [id, JSON.stringify(varieties)]
+        [id, JSON.stringify(cleanVarieties)]
       )
     }
     

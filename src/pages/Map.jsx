@@ -100,9 +100,9 @@ const Map = () => {
           phone: '+60 12-345 6789',
           latestUpdate: {
             varieties: [
-              { name: 'Musang King', price: 45, stock: 'high' },
-              { name: 'Black Thorn', price: 35, stock: 'medium' },
-              { name: 'D24 Sultan', price: 25, stock: 'low' }
+              { name: 'Musang King', stock: 'high' },
+              { name: 'Black Thorn', stock: 'medium' },
+              { name: 'D24 Sultan', stock: 'low' }
             ],
             lastUpdated: new Date().toISOString()
           }
@@ -117,8 +117,8 @@ const Map = () => {
           phone: '+60 12-345 6790',
           latestUpdate: {
             varieties: [
-              { name: 'Red Prawn', price: 30, stock: 'high' },
-              { name: 'D101', price: 28, stock: 'medium' }
+              { name: 'Red Prawn', stock: 'high' },
+              { name: 'D101', stock: 'medium' }
             ],
             lastUpdated: new Date().toISOString()
           }
@@ -258,10 +258,6 @@ const Map = () => {
                           <div key={index} className="flex justify-between items-center text-sm">
                             <span className="font-medium">{variety.name}</span>
                             <div className="text-right">
-                              <span className="font-bold text-durian-primary">
-                                RM{variety.price}/kg
-                              </span>
-                              <br />
                               <span className={getStockColor(variety.stock)}>
                                 {getStockText(variety.stock)}
                               </span>
@@ -277,22 +273,24 @@ const Map = () => {
                       </div>
 
                       {stall.latitude && stall.longitude && (
-                        <div className="flex gap-2 mt-3">
+                        <div className="flex flex-col gap-2 mt-4">
                           <a
                             href={`https://waze.com/ul?ll=${stall.latitude},${stall.longitude}&navigate=yes`}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="btn-primary px-3 py-2 text-xs"
+                            className="btn-primary flex items-center justify-center gap-2 text-base py-2 px-4 w-full"
+                            aria-label="Open in Waze"
                           >
-                            Open in Waze
+                            <span role="img" aria-label="Waze">🚗</span> Open in Waze
                           </a>
                           <a
                             href={`https://www.google.com/maps/search/?api=1&query=${stall.latitude},${stall.longitude}`}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="btn-secondary px-3 py-2 text-xs"
+                            className="btn-secondary flex items-center justify-center gap-2 text-base py-2 px-4 w-full"
+                            aria-label="Open in Google Maps"
                           >
-                            Open in Google Maps
+                            <span role="img" aria-label="Google Maps">🗺️</span> Open in Google Maps
                           </a>
                         </div>
                       )}
@@ -322,10 +320,6 @@ const Map = () => {
                     <div key={index} className="flex justify-between items-center text-sm">
                       <span className="font-medium">{variety.name}</span>
                       <div className="text-right">
-                        <span className="font-bold text-durian-primary">
-                          RM{variety.price}/kg
-                        </span>
-                        <br />
                         <span className={getStockColor(variety.stock)}>
                           {getStockText(variety.stock)}
                         </span>

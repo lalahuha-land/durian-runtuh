@@ -56,10 +56,10 @@ const Home = () => {
                 <span className="text-2xl">💰</span>
               </div>
               <h3 className="text-xl font-bold text-durian-primary mb-2">
-                Live Price Updates
+                Stock Updates
               </h3>
               <p className="text-gray-600">
-                Get current prices for all durian varieties. No more surprises when you arrive at the stall.
+                Get current stock status for all durian varieties. No more surprises when you arrive at the stall.
               </p>
             </div>
 

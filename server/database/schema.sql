@@ -38,9 +38,9 @@ INSERT INTO daily_updates (stall_id, varieties)
 SELECT 
   s.id,
   '[
-    {"name": "Musang King", "price": 45, "stock": "high"},
-    {"name": "Black Thorn", "price": 35, "stock": "medium"},
-    {"name": "D24 Sultan", "price": 25, "stock": "low"}
+    {"name": "Musang King", "stock": "high"},
+    {"name": "Black Thorn", "stock": "medium"},
+    {"name": "D24 Sultan", "stock": "low"}
   ]'::jsonb
 FROM stalls s 
 WHERE s.name = 'Durian King Stall'
