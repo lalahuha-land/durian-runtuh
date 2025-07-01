@@ -278,19 +278,19 @@ const Map = () => {
                             href={`https://waze.com/ul?ll=${stall.latitude},${stall.longitude}&navigate=yes`}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="btn-primary flex items-center justify-center gap-2 text-base py-2 px-4 w-full"
+                            className="btn-primary flex items-center justify-center gap-2 text-base py-2 px-4 w-full text-green-200 hover:text-white"
                             aria-label="Open in Waze"
                           >
-                            <span role="img" aria-label="Waze">🚗</span> Open in Waze
+                            <span role="img" aria-label="Waze">🚗</span> <span className="font-bold">Open in Waze</span>
                           </a>
                           <a
                             href={`https://www.google.com/maps/search/?api=1&query=${stall.latitude},${stall.longitude}`}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="btn-secondary flex items-center justify-center gap-2 text-base py-2 px-4 w-full"
+                            className="btn-secondary flex items-center justify-center gap-2 text-base py-2 px-4 w-full text-blue-700 hover:text-durian-primary"
                             aria-label="Open in Google Maps"
                           >
-                            <span role="img" aria-label="Google Maps">🗺️</span> Open in Google Maps
+                            <span role="img" aria-label="Google Maps">🗺️</span> <span className="font-bold">Open in Google Maps</span>
                           </a>
                         </div>
                       )}
